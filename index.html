@@ -7,7 +7,8 @@
 <meta name="theme-color" content="#ff7eb8">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="assets/icon.png">
-<title>Merch Creativity</title>
+<title>Merch Creativity Supabase</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{
@@ -16,100 +17,50 @@
   --shadow:0 14px 34px rgba(255,126,184,.15); --danger:#ff6f96;
 }
 *{box-sizing:border-box} html,body{margin:0;min-height:100%;scroll-behavior:auto}
-body{
-  font-family:Inter,Arial,sans-serif;color:var(--text);
-  background:radial-gradient(circle at 10% 10%, rgba(184,243,106,.22), transparent 22%),
-             radial-gradient(circle at 90% 8%, rgba(255,126,184,.25), transparent 26%),
-             linear-gradient(135deg,#fff9fc,#fff4fb 45%,#f7ffef);
-}
-.hide{display:none!important}
-.authPage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+body{font-family:Inter,Arial,sans-serif;color:var(--text);background:radial-gradient(circle at 10% 10%,rgba(184,243,106,.22),transparent 22%),radial-gradient(circle at 90% 8%,rgba(255,126,184,.25),transparent 26%),linear-gradient(135deg,#fff9fc,#fff4fb 45%,#f7ffef)}
+.hide{display:none!important} .authPage{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 .authBox{width:min(460px,100%);background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:28px;padding:24px;box-shadow:var(--shadow)}
-.authLogo{display:block;max-width:100%;width:300px;margin:0 auto 8px auto}
-.authBox h1{margin:8px 0 6px 0;text-align:center;font-size:28px}
-.sub{margin:0 0 16px 0;text-align:center;color:var(--muted);font-size:13px}
-header{
-  position:sticky;top:0;z-index:10;
-  background:linear-gradient(90deg, rgba(255,126,184,.92), rgba(184,243,106,.88));
-  border-bottom:1px solid rgba(255,255,255,.6);
-  box-shadow:0 8px 24px rgba(255,126,184,.15)
-}
+.authLogo{display:block;max-width:100%;width:300px;margin:0 auto 8px auto} .authBox h1{margin:8px 0 6px;text-align:center;font-size:28px}
+.sub{margin:0 0 16px;text-align:center;color:var(--muted);font-size:13px}
+header{position:sticky;top:0;z-index:10;background:linear-gradient(90deg,rgba(255,126,184,.92),rgba(184,243,106,.88));border-bottom:1px solid rgba(255,255,255,.6);box-shadow:0 8px 24px rgba(255,126,184,.15)}
 .headerWrap{max-width:1250px;margin:auto;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.brand{display:flex;align-items:center;gap:14px}.brand img{width:170px;max-width:38vw}
-.brandText h1{margin:0;font-size:22px}.brandText p{margin:4px 0 0 0;color:#fff;font-size:12px;font-weight:700}
+.brand{display:flex;align-items:center;gap:14px} .brand img{width:170px;max-width:38vw} .brandText h1{margin:0;font-size:22px} .brandText p{margin:4px 0 0;color:#fff;font-size:12px;font-weight:700}
 .badge{display:inline-block;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.8);font-size:12px;font-weight:900;margin-right:8px}
-main{max-width:1250px;margin:auto;padding:18px}
-.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
-.tab{border:1px solid var(--line);border-radius:14px;padding:11px 14px;font-weight:900;background:#fff;color:var(--text);cursor:pointer}
-.tab.active{background:linear-gradient(90deg,var(--pink),var(--green));color:#fff;border-color:transparent}
-.card{background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:var(--shadow)}
-.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
+main{max-width:1250px;margin:auto;padding:18px} .tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.tab{border:1px solid var(--line);border-radius:14px;padding:11px 14px;font-weight:900;background:#fff;color:var(--text);cursor:pointer} .tab.active{background:linear-gradient(90deg,var(--pink),var(--green));color:#fff;border-color:transparent}
+.card{background:rgba(255,255,255,.97);border:1px solid var(--line);border-radius:24px;padding:18px;box-shadow:var(--shadow)} .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px}
 .span12{grid-column:span 12}.span8{grid-column:span 8}.span7{grid-column:span 7}.span6{grid-column:span 6}.span5{grid-column:span 5}.span4{grid-column:span 4}.span3{grid-column:span 3}
 @media(max-width:920px){.span8,.span7,.span6,.span5,.span4,.span3{grid-column:span 12}}
-label{display:block;margin:10px 0 6px;font-size:13px;font-weight:900;color:var(--muted)}
-input,select,textarea{width:100%;padding:12px 13px;border-radius:14px;border:1px solid var(--line);background:white;color:var(--text);outline:none}
-input:focus,select:focus,textarea:focus{border-color:var(--pink)}
-button,.fakeBtn{border:none;border-radius:14px;padding:11px 14px;font-weight:900;cursor:pointer}
-.btn{background:linear-gradient(90deg,var(--pink),#ff95c7);color:#fff}
-.btn2{background:#fff;color:var(--text);border:1px solid var(--line)}
-.btnGreen{background:linear-gradient(90deg,#b8f36a,#d9ff9b);color:#3c5f0b}
-.danger{background:linear-gradient(90deg,#ff7a96,#ff95ac);color:#fff}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.small{font-size:12px;color:var(--muted)}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-@media(max-width:640px){.row,.row3{grid-template-columns:1fr}}
-.stat{padding:16px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(180deg,#fff,#fffafc)}
-.stat h2{margin:0;font-size:28px}.stat p{margin:6px 0 0 0;font-size:12px;font-weight:900;color:var(--muted)}
-table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden}
-th,td{padding:10px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;vertical-align:top}
-th{background:#fff4f9;color:#714f67}
-.productPick{display:grid;grid-template-columns:90px 1fr 42px 70px 42px;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:18px;background:#fff;margin-bottom:10px}
-.productPick img{width:90px;height:90px;object-fit:cover;border-radius:14px;border:1px solid var(--line);background:#111}
+label{display:block;margin:10px 0 6px;font-size:13px;font-weight:900;color:var(--muted)} input,select,textarea{width:100%;padding:12px 13px;border-radius:14px;border:1px solid var(--line);background:white;color:var(--text);outline:none}
+button,.fakeBtn{border:none;border-radius:14px;padding:11px 14px;font-weight:900;cursor:pointer} .btn{background:linear-gradient(90deg,var(--pink),#ff95c7);color:#fff} .btn2{background:#fff;color:var(--text);border:1px solid var(--line)} .btnGreen{background:linear-gradient(90deg,#b8f36a,#d9ff9b);color:#3c5f0b} .danger{background:linear-gradient(90deg,#ff7a96,#ff95ac);color:#fff}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px} .small{font-size:12px;color:var(--muted)} .row{display:grid;grid-template-columns:1fr 1fr;gap:10px} .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px} @media(max-width:640px){.row,.row3{grid-template-columns:1fr}}
+.stat{padding:16px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(180deg,#fff,#fffafc)} .stat h2{margin:0;font-size:28px} .stat p{margin:6px 0 0;font-size:12px;font-weight:900;color:var(--muted)}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;overflow:hidden} th,td{padding:10px;border-bottom:1px solid var(--line);font-size:13px;text-align:left;vertical-align:top} th{background:#fff4f9;color:#714f67}
+.productPick{display:grid;grid-template-columns:90px 1fr 42px 70px 42px;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:18px;background:#fff;margin-bottom:10px} .productPick img{width:90px;height:90px;object-fit:cover;border-radius:14px;border:1px solid var(--line);background:#111}
 @media(max-width:700px){.productPick{grid-template-columns:1fr}.productPick img{width:100%;height:auto;max-height:180px}}
-.productGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.prodCard{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff}
-.prodCard img{width:100%;aspect-ratio:1/1;object-fit:cover;background:#111}
-.prodCard .body{padding:12px}.prodCard h4{margin:0 0 6px 0}.prodCard p{margin:0;font-size:12px;color:var(--muted)}
-.productThumb{width:55px;height:55px;object-fit:cover;border-radius:10px;border:1px solid var(--line);background:#111}
-.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#f4ffde;color:#4a6c18;font-size:12px;font-weight:900}
-.matchOK{color:#3b8813;font-weight:900}.matchDiff{color:#db4d7c;font-weight:900}
-canvas{max-height:300px}.installBox{display:none;border:1px dashed var(--pink);border-radius:18px;padding:12px;background:#fff6fb;margin-bottom:16px}
-footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
+.productGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px} .prodCard{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:#fff} .prodCard img{width:100%;aspect-ratio:1/1;object-fit:cover;background:#111} .prodCard .body{padding:12px} .prodCard h4{margin:0 0 6px} .prodCard p{margin:0;font-size:12px;color:var(--muted)}
+.productThumb{width:55px;height:55px;object-fit:cover;border-radius:10px;border:1px solid var(--line);background:#111} .pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#f4ffde;color:#4a6c18;font-size:12px;font-weight:900}
+.matchOK{color:#3b8813;font-weight:900}.matchDiff{color:#db4d7c;font-weight:900} canvas{max-height:300px} .installBox{display:none;border:1px dashed var(--pink);border-radius:18px;padding:12px;background:#fff6fb;margin-bottom:16px}
+.loading{position:fixed;inset:0;background:rgba(255,255,255,.72);display:flex;align-items:center;justify-content:center;z-index:99;font-weight:900;color:#d85491} footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
 </style>
 </head>
 <body>
+<div id="loading" class="loading hide">Sinkron ke Supabase...</div>
 <div id="loginPage" class="authPage">
   <div class="authBox">
     <img class="authLogo" src="assets/logo_merch.png" alt="Merch Creativity">
     <h1>Merch Creativity</h1>
-    <div class="sub">Aplikasi pencatatan penjualan, laporan, dan dashboard tim merch.</div>
+    <div class="sub">Aplikasi laporan online sinkron Supabase.</div>
     <label>Username</label><input id="loginUser" autocomplete="username">
     <label>Password</label><input id="loginPass" type="password" autocomplete="current-password">
     <div class="actions"><button class="btn" onclick="login()">Login</button></div>
+    <p class="small">Data tersimpan online di Supabase, jadi bisa dibuka dari device lain.</p>
   </div>
 </div>
-
 <div id="app" class="hide">
-  <header>
-    <div class="headerWrap">
-      <div class="brand">
-        <img src="assets/logo_merch.png" alt="Merch Creativity">
-        <div class="brandText">
-          <h1>Merch Creativity</h1>
-          <p>Dashboard penjualan, laporan, cash/QRIS, dan kontrol produk merch.</p>
-        </div>
-      </div>
-      <div><span id="userBadge" class="badge"></span><button class="btn2" onclick="logout()">Logout</button></div>
-    </div>
-  </header>
-
+  <header><div class="headerWrap"><div class="brand"><img src="assets/logo_merch.png" alt="Merch Creativity"><div class="brandText"><h1>Merch Creativity</h1><p>Dashboard penjualan, laporan, cash/QRIS, dan kontrol produk merch.</p></div></div><div><span id="userBadge" class="badge"></span><button class="btn2" onclick="logout()">Logout</button></div></div></header>
   <main>
-    <div id="installBox" class="installBox">
-      <b>Install aplikasi ke device</b>
-      <p class="small">Tekan install biar lebih gampang dibuka seperti aplikasi biasa.</p>
-      <button id="installBtn" class="btn">Install Aplikasi</button>
-    </div>
-
+    <div id="installBox" class="installBox"><b>Install aplikasi ke device</b><p class="small">Tekan install biar lebih gampang dibuka seperti aplikasi biasa.</p><button id="installBtn" class="btn">Install Aplikasi</button></div>
     <div class="tabs">
       <button class="tab active" onclick="showTab(event,'dashboard')">Dashboard</button>
       <button class="tab" onclick="showTab(event,'inputLaporan')">Input Laporan</button>
@@ -120,21 +71,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
       <button class="tab adminOnly" onclick="showTab(event,'tim')">Akun Tim</button>
       <button class="tab adminOnly" onclick="showTab(event,'backup')">Backup/Admin</button>
     </div>
-
     <section id="dashboard" class="page grid">
-      <div class="card span12">
-        <div class="row">
-          <div><label>Dari tanggal</label><input type="date" id="filterStart"></div>
-          <div><label>Sampai tanggal</label><input type="date" id="filterEnd"></div>
-        </div>
-        <div class="actions">
-          <button class="btn" onclick="renderAll()">Terapkan</button>
-          <button class="btn2" onclick="setPreset('today')">Hari Ini</button>
-          <button class="btn2" onclick="setPreset('week')">Minggu Ini</button>
-          <button class="btn2" onclick="setPreset('month')">Bulan Ini</button>
-          <button class="btnGreen" onclick="resetFilter()">Reset</button>
-        </div>
-      </div>
+      <div class="card span12"><div class="row"><div><label>Dari tanggal</label><input type="date" id="filterStart"></div><div><label>Sampai tanggal</label><input type="date" id="filterEnd"></div></div><div class="actions"><button class="btn" onclick="loadAll()">Refresh Data</button><button class="btn2" onclick="setPreset('today')">Hari Ini</button><button class="btn2" onclick="setPreset('week')">Minggu Ini</button><button class="btn2" onclick="setPreset('month')">Bulan Ini</button><button class="btnGreen" onclick="resetFilter()">Reset</button></div></div>
       <div class="card span3"><div class="stat"><h2 id="dashRevenueToday">Rp0</h2><p>Omzet Hari Ini</p></div></div>
       <div class="card span3"><div class="stat"><h2 id="dashRevenueMonth">Rp0</h2><p>Omzet Bulan Ini</p></div></div>
       <div class="card span3"><div class="stat"><h2 id="dashCashQris">Rp0</h2><p>Cash + QRIS Hari Ini</p></div></div>
@@ -142,412 +80,132 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
       <div class="card span6"><h3>Omzet vs Pengeluaran</h3><canvas id="cashChart"></canvas></div>
       <div class="card span6"><h3>Produk Paling Laku</h3><canvas id="productChart"></canvas></div>
     </section>
-
     <section id="inputLaporan" class="page grid hide">
-      <div class="card span8">
-        <h3>Input Laporan Penjualan</h3>
-        <div class="row">
-          <div><label>Nama penjual</label><select id="workerName"></select></div>
-          <div><label>Tanggal</label><input type="date" id="reportDate"></div>
-        </div>
-        <label>Produk terjual</label><div id="quickProducts"></div>
-        <div class="row3">
-          <div><label>Total Cash</label><input type="number" id="cashPaid" min="0" value="0" oninput="renderQuickInput()"></div>
-          <div><label>Total QRIS</label><input type="number" id="qrisPaid" min="0" value="0" oninput="renderQuickInput()"></div>
-          <div><label>Status Kecocokan</label><input id="matchStatus" readonly></div>
-        </div>
-        <div class="stat" style="margin-top:14px"><h2 id="quickTotal">Rp0</h2><p>Total omzet dari produk yang dipilih</p></div>
-        <div class="actions"><button class="btnGreen" onclick="saveWorkerReport()">Simpan Laporan</button><button class="btn2" onclick="resetQuickInput()">Kosongkan</button></div>
-      </div>
+      <div class="card span8"><h3>Input Laporan Penjualan</h3><div class="row"><div><label>Nama penjual</label><select id="workerName"></select></div><div><label>Tanggal</label><input type="date" id="reportDate"></div></div><label>Produk terjual</label><div id="quickProducts"></div><div class="row3"><div><label>Total Cash</label><input type="number" id="cashPaid" min="0" value="0" oninput="renderQuickInput()"></div><div><label>Total QRIS</label><input type="number" id="qrisPaid" min="0" value="0" oninput="renderQuickInput()"></div><div><label>Status Kecocokan</label><input id="matchStatus" readonly></div></div><div class="stat" style="margin-top:14px"><h2 id="quickTotal">Rp0</h2><p>Total omzet dari produk yang dipilih</p></div><div class="actions"><button class="btnGreen" onclick="saveWorkerReport()">Simpan Laporan</button><button class="btn2" onclick="resetQuickInput()">Kosongkan</button></div></div>
       <div class="card span4"><h3>Ringkasan Input</h3><div id="quickSummary" class="small">Belum ada item dipilih.</div></div>
     </section>
-
     <section id="cash" class="page grid hide">
-      <div class="card span6">
-        <h3>Pemasukan / Pengeluaran Tambahan</h3>
-        <label>Tanggal</label><input type="date" id="cashDate">
-        <label>Jenis</label><select id="cashType"><option value="income">Pemasukan Tambahan</option><option value="expense">Pengeluaran</option></select>
-        <label>Kategori</label>
-        <select id="cashCategory">
-          <option>Bahan baku</option><option>Akrilik</option><option>Ring gantungan</option><option>Packaging</option><option>Print / UV</option><option>Transport</option><option>Lainnya</option>
-        </select>
-        <label>Nominal</label><input type="number" id="cashAmount" min="0">
-        <label>Catatan</label><textarea id="cashNote" rows="3"></textarea>
-        <div class="actions"><button class="btn" onclick="addCash()">Simpan Cash</button></div>
-      </div>
+      <div class="card span6"><h3>Pemasukan / Pengeluaran Tambahan</h3><label>Tanggal</label><input type="date" id="cashDate"><label>Jenis</label><select id="cashType"><option value="income">Pemasukan Tambahan</option><option value="expense">Pengeluaran</option></select><label>Kategori</label><select id="cashCategory"><option>Bahan baku</option><option>Akrilik</option><option>Ring gantungan</option><option>Packaging</option><option>Print / UV</option><option>Transport</option><option>Lainnya</option></select><label>Nominal</label><input type="number" id="cashAmount" min="0"><label>Catatan</label><textarea id="cashNote" rows="3"></textarea><div class="actions"><button class="btn" onclick="addCash()">Simpan Cash</button></div></div>
       <div class="card span6"><h3>Riwayat Cash</h3><div style="overflow:auto"><table id="cashTable"></table></div></div>
     </section>
-
     <section id="produk" class="page grid hide">
       <div class="card span12"><h3>Contoh Produk Merch Creativity</h3><div class="productGrid" id="productGallery"></div></div>
-      <div class="card span5 adminOnlyBlock">
-        <h3>Tambah Produk</h3>
-        <label>Nama Produk</label><input id="productName">
-        <label>Harga</label><input type="number" id="productPrice" min="0">
-        <label>Path gambar (opsional)</label><input id="productImage" placeholder="assets/product_blue.png">
-        <div class="actions"><button class="btn" onclick="addProduct()">Tambah</button></div>
-      </div>
+      <div class="card span5 adminOnlyBlock"><h3>Tambah Produk</h3><label>Nama Produk</label><input id="productName"><label>Harga</label><input type="number" id="productPrice" min="0"><label>Path gambar</label><input id="productImage" placeholder="assets/product_blue.png"><div class="actions"><button class="btn" onclick="addProduct()">Tambah</button></div></div>
       <div class="card span7"><h3>Daftar Produk & Harga</h3><div style="overflow:auto"><table id="productsTable"></table></div></div>
     </section>
-
-    <section id="laporan" class="page grid hide">
-      <div class="card span12">
-        <h3>Riwayat Laporan</h3>
-        <div class="actions"><button class="btn adminOnly" onclick="exportCSV()">Export CSV</button><button class="btn2 adminOnly" onclick="window.print()">Print / Save PDF</button></div>
-        <p id="reportText" class="small"></p>
-        <div style="overflow:auto"><table id="reportTable"></table></div>
-      </div>
-    </section>
-
+    <section id="laporan" class="page grid hide"><div class="card span12"><h3>Riwayat Laporan</h3><div class="actions"><button class="btn adminOnly" onclick="exportCSV()">Export CSV</button><button class="btn2 adminOnly" onclick="window.print()">Print / Save PDF</button></div><p id="reportText" class="small"></p><div style="overflow:auto"><table id="reportTable"></table></div></div></section>
     <section id="rekap" class="page grid hide">
-      <div class="card span12">
-        <h3>Rekap Bulanan</h3>
-        <div class="row">
-          <div><label>Pilih bulan</label><input type="month" id="monthPick" onchange="renderMonthly()"></div>
-          <div><label>&nbsp;</label><button class="btn" onclick="renderMonthly()">Tampilkan</button></div>
-        </div>
-      </div>
-      <div class="card span3"><div class="stat"><h2 id="mIncome">Rp0</h2><p>Pendapatan Bulan</p></div></div>
-      <div class="card span3"><div class="stat"><h2 id="mExpense">Rp0</h2><p>Pengeluaran Bulan</p></div></div>
-      <div class="card span3"><div class="stat"><h2 id="mCashQris">Rp0</h2><p>Cash + QRIS Bulan</p></div></div>
-      <div class="card span3"><div class="stat"><h2 id="mProfit">Rp0</h2><p>Laba Bersih</p></div></div>
-      <div class="card span6"><h3>Produk Terlaris</h3><div style="overflow:auto"><table id="monthlyProductTable"></table></div></div>
-      <div class="card span6"><h3>Penjualan per Penjual</h3><div style="overflow:auto"><table id="monthlyWorkerTable"></table></div></div>
+      <div class="card span12"><h3>Rekap Bulanan</h3><div class="row"><div><label>Pilih bulan</label><input type="month" id="monthPick" onchange="renderMonthly()"></div><div><label>&nbsp;</label><button class="btn" onclick="renderMonthly()">Tampilkan</button></div></div></div>
+      <div class="card span3"><div class="stat"><h2 id="mIncome">Rp0</h2><p>Pendapatan Bulan</p></div></div><div class="card span3"><div class="stat"><h2 id="mExpense">Rp0</h2><p>Pengeluaran Bulan</p></div></div><div class="card span3"><div class="stat"><h2 id="mCashQris">Rp0</h2><p>Cash + QRIS Bulan</p></div></div><div class="card span3"><div class="stat"><h2 id="mProfit">Rp0</h2><p>Laba Bersih</p></div></div>
+      <div class="card span6"><h3>Produk Terlaris</h3><div style="overflow:auto"><table id="monthlyProductTable"></table></div></div><div class="card span6"><h3>Penjualan per Penjual</h3><div style="overflow:auto"><table id="monthlyWorkerTable"></table></div></div>
     </section>
-
-    <section id="tim" class="page grid hide">
-      <div class="card span5">
-        <h3>Buat Akun Tim</h3>
-        <label>Nama Tim</label><input id="newEmpName" placeholder="Contoh: Sinta">
-        <label>Username</label><input id="newEmpUser" placeholder="sinta">
-        <label>Password</label><input id="newEmpPass" type="password" placeholder="password">
-        <div class="actions"><button class="btn" onclick="addEmployee()">Buat Akun</button></div>
-      </div>
-      <div class="card span7"><h3>Daftar Akun Tim</h3><div style="overflow:auto"><table id="employeeTable"></table></div></div>
-    </section>
-
-    <section id="backup" class="page grid hide">
-      <div class="card span6">
-        <h3>Backup & Restore</h3>
-        <p class="small">Simpan backup JSON biar data aman kalau browser di-reset.</p>
-        <div class="actions"><button class="btn" onclick="exportJSON()">Backup JSON</button><label class="fakeBtn btn2">Restore JSON <input type="file" accept=".json" onchange="importJSON(event)" style="display:none"></label></div>
-      </div>
-      <div class="card span6">
-        <h3>Setting Admin</h3>
-        <label>Username Admin</label><input id="adminUser">
-        <label>Password Admin Baru</label><input id="adminPass" type="password">
-        <div class="actions"><button class="btnGreen" onclick="saveSettings()">Simpan Admin</button><button class="danger" onclick="clearAll()">Reset Semua Data</button></div>
-      </div>
-    </section>
-  </main>
-  <footer>Merch Creativity • admin bisa ganti credential di menu Backup/Admin</footer>
+    <section id="tim" class="page grid hide"><div class="card span5"><h3>Buat Akun Tim</h3><label>Nama Tim</label><input id="newEmpName" placeholder="Contoh: Sinta"><label>Username</label><input id="newEmpUser" placeholder="sinta"><label>Password</label><input id="newEmpPass" type="password" placeholder="password"><div class="actions"><button class="btn" onclick="addEmployee()">Buat Akun</button></div></div><div class="card span7"><h3>Daftar Akun Tim</h3><div style="overflow:auto"><table id="employeeTable"></table></div></div></section>
+    <section id="backup" class="page grid hide"><div class="card span6"><h3>Backup</h3><div class="actions"><button class="btn" onclick="exportCSV()">Export CSV Laporan</button><button class="btn2" onclick="loadAll()">Refresh dari Supabase</button></div><p class="small">Versi ini menyimpan data online ke Supabase, bukan localStorage.</p></div><div class="card span6"><h3>Setting Admin</h3><label>Username Admin</label><input id="adminUser"><label>Password Admin Baru</label><input id="adminPass" type="password"><div class="actions"><button class="btnGreen" onclick="saveSettings()">Simpan Admin</button></div></div></section>
+  </main><footer>Merch Creativity • Supabase sync version</footer>
 </div>
-
 <script>
-const DEFAULT_ADMIN_USER = "teamcreativity";
-const DEFAULT_ADMIN_PASS = "teambelumtidur";
-const defaultProducts = [{"id": "p1", "name": "Ganci Akrilik Karambit Blue", "price": 18000, "image": "assets/product_blue.png"}, {"id": "p2", "name": "Ganci Akrilik Karambit Pink", "price": 18000, "image": "assets/product_pink.png"}, {"id": "p3", "name": "Ganci Akrilik Karambit Monochrome", "price": 17000, "image": "assets/product_monochrome.png"}];
-let db = JSON.parse(localStorage.getItem("merchCreativityAppV1") || "null") || {
-  products: defaultProducts,
-  reports: [],
-  cash: [],
-  employees: [],
-  settings: {adminUser: DEFAULT_ADMIN_USER, adminPass: DEFAULT_ADMIN_PASS}
-};
-let session = JSON.parse(sessionStorage.getItem("merchCreativitySessionV1") || "null");
-let quickQty = {};
-let charts = {};
-let deferredPrompt = null;
+const SUPABASE_URL = "https://khlarieqasamgwtdnxjy.supabase.co";
+const SUPABASE_KEY = "sb_publishable_27eMKO3koOkskjU2jDtsgg_BCsWLHAJ";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession:false, autoRefreshToken:false } });
+
+let db = {products:[], reports:[], cash:[], employees:[]};
+let session = JSON.parse(sessionStorage.getItem("merchCreativitySupabaseSessionV1") || "null");
+let quickQty = {}, charts = {}, deferredPrompt = null;
 const today = () => new Date().toISOString().slice(0,10);
 const ym = () => new Date().toISOString().slice(0,7);
-function save(){ localStorage.setItem("merchCreativityAppV1", JSON.stringify(db)); }
 function rupiah(n){ return new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(n||0); }
+function setLoading(v){ loading.classList.toggle("hide", !v); }
+async function sha256(text){ const enc = new TextEncoder().encode("merch_creativity_v1:" + text); const buf = await crypto.subtle.digest("SHA-256", enc); return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join(""); }
+function handleError(prefix, err){ console.error(prefix, err); alert(prefix + ": " + (err?.message || JSON.stringify(err))); }
 
-function login(){
+async function login(){
   const u = loginUser.value.trim(), p = loginPass.value;
-  if(u === db.settings.adminUser && p === db.settings.adminPass){
-    session = {role:"admin", name:"Team Creativity Admin", username:u};
-  } else {
-    const emp = db.employees.find(e => e.username === u && e.password === p);
-    if(emp) session = {role:"pegawai", name:emp.name, username:emp.username};
-    else return alert("Username atau password salah.");
-  }
-  sessionStorage.setItem("merchCreativitySessionV1", JSON.stringify(session));
-  loginPass.value = "";
-  boot();
+  if(!u || !p) return alert("Isi username dan password dulu.");
+  setLoading(true);
+  try{
+    const {data, error} = await sb.from("app_users").select("id,name,username,password_hash,role,is_active").eq("username", u).eq("is_active", true).maybeSingle();
+    if(error) throw error;
+    if(!data) return alert("Username atau password salah.");
+    const h = await sha256(p);
+    if(h !== data.password_hash) return alert("Username atau password salah.");
+    session = {id:data.id, name:data.name, username:data.username, role:data.role};
+    sessionStorage.setItem("merchCreativitySupabaseSessionV1", JSON.stringify(session));
+    loginPass.value = "";
+    await boot();
+  } catch(err){ handleError("Login gagal", err); }
+  finally{ setLoading(false); }
 }
-function logout(){
-  sessionStorage.removeItem("merchCreativitySessionV1");
-  session = null;
-  app.classList.add("hide");
-  loginPage.classList.remove("hide");
-  window.scrollTo({top:0,left:0});
-}
-function boot(){
+function logout(){ sessionStorage.removeItem("merchCreativitySupabaseSessionV1"); session=null; app.classList.add("hide"); loginPage.classList.remove("hide"); window.scrollTo({top:0,left:0}); }
+
+async function boot(){
   if(session){
-    loginPage.classList.add("hide");
-    app.classList.remove("hide");
+    loginPage.classList.add("hide"); app.classList.remove("hide");
     userBadge.textContent = session.role === "admin" ? "Admin" : session.name;
     document.querySelectorAll(".adminOnly").forEach(el => el.style.display = session.role === "admin" ? "inline-block" : "none");
     document.querySelectorAll(".adminOnlyBlock").forEach(el => el.style.display = session.role === "admin" ? "block" : "none");
-    setDates();
-    showPage("dashboard");
-    renderAll();
-  } else {
-    app.classList.add("hide");
-    loginPage.classList.remove("hide");
-  }
+    setDates(); showPage("dashboard"); await loadAll();
+  } else { app.classList.add("hide"); loginPage.classList.remove("hide"); }
 }
-function showPage(id){
-  document.querySelectorAll(".page").forEach(p => p.classList.add("hide"));
-  document.getElementById(id).classList.remove("hide");
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  const target = [...document.querySelectorAll(".tab")].find(btn => (btn.getAttribute("onclick") || "").includes("'" + id + "'"));
-  if(target) target.classList.add("active");
-  window.scrollTo({top:0,left:0});
-}
+function showPage(id){ document.querySelectorAll(".page").forEach(p=>p.classList.add("hide")); document.getElementById(id).classList.remove("hide"); document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active")); const target=[...document.querySelectorAll(".tab")].find(btn=>(btn.getAttribute("onclick")||"").includes("'" + id + "'")); if(target)target.classList.add("active"); window.scrollTo({top:0,left:0}); }
 function showTab(ev,id){ showPage(id); renderAll(); }
-function setDates(){
-  ["reportDate","cashDate"].forEach(id => { const el = document.getElementById(id); if(el && !el.value) el.value = today(); });
-  if(!monthPick.value) monthPick.value = ym();
-  adminUser.value = db.settings.adminUser;
-  adminPass.value = "";
-}
-function inRange(date){ const s = filterStart.value, e = filterEnd.value; return (!s || date >= s) && (!e || date <= e); }
-function firstDayOfWeek(d){ const x = new Date(d); const day = x.getDay() || 7; x.setDate(x.getDate() - day + 1); return x.toISOString().slice(0,10); }
-function setPreset(p){ const t = today(); if(p==="today"){filterStart.value=t; filterEnd.value=t;} else if(p==="week"){filterStart.value=firstDayOfWeek(t); filterEnd.value=t;} else {filterStart.value=t.slice(0,7)+"-01"; filterEnd.value=t;} renderAll(); }
+function setDates(){ ["reportDate","cashDate"].forEach(id=>{const el=document.getElementById(id); if(el && !el.value) el.value=today();}); if(!monthPick.value) monthPick.value=ym(); if(session){adminUser.value=session.username; adminPass.value="";} }
+function inRange(date){ const s=filterStart.value,e=filterEnd.value; return (!s||date>=s)&&(!e||date<=e); }
+function firstDayOfWeek(d){ const x=new Date(d); const day=x.getDay()||7; x.setDate(x.getDate()-day+1); return x.toISOString().slice(0,10); }
+function setPreset(p){ const t=today(); if(p==="today"){filterStart.value=t;filterEnd.value=t;} else if(p==="week"){filterStart.value=firstDayOfWeek(t);filterEnd.value=t;} else {filterStart.value=t.slice(0,7)+"-01";filterEnd.value=t;} renderAll(); }
 function resetFilter(){ filterStart.value=""; filterEnd.value=""; renderAll(); }
-function productById(id){ return db.products.find(p => p.id === id) || {name:"Produk terhapus", price:0, image:""}; }
 
-function renderWorkerSelect(){
-  if(session.role === "admin"){
-    workerName.innerHTML = `<option value="Team Creativity Admin">Team Creativity Admin</option>` + db.employees.map(e => `<option value="${e.name}">${e.name}</option>`).join("");
-  } else {
-    workerName.innerHTML = `<option value="${session.name}">${session.name}</option>`;
-  }
-}
-function renderProductGallery(){
-  productGallery.innerHTML = db.products.map(p => `
-    <div class="prodCard">
-      <img src="${p.image || 'assets/product_pink.png'}" alt="${p.name}">
-      <div class="body">
-        <span class="pill">Contoh Produk</span>
-        <h4>${p.name}</h4>
-        <p>Harga contoh: <b>${rupiah(p.price)}</b></p>
-      </div>
-    </div>
-  `).join("");
-}
-function renderProducts(){
-  renderProductGallery();
-  if(session.role === "admin"){
-    productsTable.innerHTML = `<tr><th>Foto</th><th>Produk</th><th>Harga</th><th>Path Gambar</th><th>Aksi</th></tr>` + db.products.map(p => `
-      <tr>
-        <td><img class="productThumb" src="${p.image || 'assets/product_pink.png'}"></td>
-        <td>${p.name}</td>
-        <td><input type="number" id="price_${p.id}" value="${p.price}"></td>
-        <td><input id="img_${p.id}" value="${p.image || ''}"></td>
-        <td><button class="btn" onclick="updateProduct('${p.id}')">Simpan</button> <button class="danger" onclick="deleteProduct('${p.id}')">Hapus</button></td>
-      </tr>`).join("");
-  } else {
-    productsTable.innerHTML = `<tr><th>Foto</th><th>Produk</th><th>Harga</th></tr>` + db.products.map(p => `
-      <tr><td><img class="productThumb" src="${p.image || 'assets/product_pink.png'}"></td><td>${p.name}</td><td>${rupiah(p.price)}</td></tr>`).join("");
-  }
-}
-function addProduct(){
-  const name = productName.value.trim(), price = +productPrice.value, image = productImage.value.trim() || "assets/product_pink.png";
-  if(!name || price < 0) return alert("Nama dan harga wajib diisi.");
-  db.products.push({id:"p"+Date.now(), name, price, image});
-  productName.value=""; productPrice.value=""; productImage.value="";
-  save(); renderAll();
-}
-function updateProduct(id){
-  const p = productById(id);
-  p.price = +(document.getElementById("price_"+id).value) || 0;
-  p.image = document.getElementById("img_"+id).value.trim() || p.image;
-  save(); renderAll(); alert("Produk berhasil diupdate.");
-}
-function deleteProduct(id){
-  if(confirm("Hapus produk ini?")){ db.products = db.products.filter(p => p.id !== id); delete quickQty[id]; save(); renderAll(); }
-}
-
-function renderQuickInput(){
-  db.products.forEach(p => { if(quickQty[p.id] === undefined) quickQty[p.id] = 0; });
-  quickProducts.innerHTML = db.products.map(p => `
-    <div class="productPick">
-      <img src="${p.image || 'assets/product_pink.png'}" alt="${p.name}">
-      <div><b>${p.name}</b><br><span class="small">${rupiah(p.price)} / pcs</span></div>
-      <button class="btn2" onclick="changeQty('${p.id}',-1)">−</button>
-      <input type="number" min="0" value="${quickQty[p.id] || 0}" onchange="setQty('${p.id}',this.value)">
-      <button class="btn" onclick="changeQty('${p.id}',1)">+</button>
-    </div>`).join("");
-  const selected = db.products.filter(p => (quickQty[p.id] || 0) > 0);
-  const total = selected.reduce((sum,p) => sum + quickQty[p.id] * p.price, 0);
-  const cash = +cashPaid.value || 0, qris = +qrisPaid.value || 0, diff = (cash + qris) - total;
-  quickTotal.textContent = rupiah(total);
-  matchStatus.value = diff === 0 ? "Cocok" : `Selisih ${rupiah(diff)}`;
-  matchStatus.className = diff === 0 ? "matchOK" : "matchDiff";
-  quickSummary.innerHTML = selected.length ? selected.map(p => `<div><b>${p.name}</b> • ${quickQty[p.id]} x ${rupiah(p.price)} = <b>${rupiah(quickQty[p.id]*p.price)}</b></div>`).join("") : "Belum ada item dipilih.";
-}
-function changeQty(id,d){ quickQty[id] = Math.max(0, (quickQty[id] || 0) + d); renderQuickInput(); }
-function setQty(id,v){ quickQty[id] = Math.max(0, +v || 0); renderQuickInput(); }
-function resetQuickInput(){ quickQty = {}; cashPaid.value = 0; qrisPaid.value = 0; renderQuickInput(); }
-function saveWorkerReport(){
-  const worker = workerName.value, date = reportDate.value;
-  const items = db.products.filter(p => (quickQty[p.id] || 0) > 0).map(p => ({productId:p.id, productName:p.name, qty:quickQty[p.id], price:p.price, total:quickQty[p.id]*p.price}));
-  if(!date) return alert("Tanggal wajib diisi.");
-  if(!items.length) return alert("Minimal pilih satu produk.");
-  const total = items.reduce((a,b) => a + b.total, 0), cash = +cashPaid.value || 0, qris = +qrisPaid.value || 0, diff = (cash + qris) - total;
-  db.reports.push({id:"r"+Date.now(), worker, date, items, total, cash, qris, diff, status: diff===0 ? "Cocok" : "Selisih", createdBy: session.name, createdAt: new Date().toISOString()});
-  save(); alert("Laporan berhasil disimpan."); resetQuickInput(); renderAll(); showPage("laporan");
-}
-
-function addCash(){
-  const amount = +cashAmount.value;
-  if(!cashDate.value || amount <= 0) return alert("Lengkapi data cash dulu.");
-  db.cash.push({id:"c"+Date.now(), date:cashDate.value, type:cashType.value, category:cashCategory.value, amount, note:cashNote.value.trim()});
-  cashAmount.value=""; cashNote.value="";
-  save(); renderAll();
-}
-function deleteCash(id){ db.cash = db.cash.filter(c => c.id !== id); save(); renderAll(); }
-function renderCash(){
-  cashTable.innerHTML = `<tr><th>Tanggal</th><th>Jenis</th><th>Kategori</th><th>Nominal</th><th>Aksi</th></tr>` + db.cash.filter(c => inRange(c.date)).sort((a,b) => b.date.localeCompare(a.date)).map(c => `
-    <tr><td>${c.date}</td><td>${c.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}</td><td>${c.category}</td><td>${rupiah(c.amount)}</td><td><button class="danger" onclick="deleteCash('${c.id}')">Hapus</button></td></tr>`).join("");
-}
-
-function visibleReports(){ let arr = db.reports.filter(r => inRange(r.date)); if(session.role !== "admin") arr = arr.filter(r => r.worker === session.name); return arr; }
-function flattenSales(src){ const reports = src || visibleReports(); const rows = []; reports.forEach(r => r.items.forEach(i => rows.push({...i, date:r.date, worker:r.worker, reportId:r.id}))); return rows; }
-function drawChart(id, labels, datasets){
-  if(charts[id]) charts[id].destroy();
-  charts[id] = new Chart(document.getElementById(id), {type:"bar", data:{labels, datasets}, options:{responsive:true, plugins:{legend:{display:true}}, scales:{y:{beginAtZero:true}}}});
-}
-function renderDashboard(){
-  const reportSource = session.role === "admin" ? db.reports : db.reports.filter(r => r.worker === session.name);
-  const reports = reportSource.filter(r => inRange(r.date));
-  const sales = flattenSales(reports);
-  const cashRows = session.role === "admin" ? db.cash.filter(c => inRange(c.date)) : [];
-  const revenueFilter = reports.reduce((sum,r) => sum + r.total, 0) + cashRows.filter(c => c.type === 'income').reduce((a,b) => a + b.amount, 0);
-  const expenseFilter = cashRows.filter(c => c.type === 'expense').reduce((a,b) => a + b.amount, 0);
-  const todayReports = reportSource.filter(r => r.date === today());
-  const todayRevenue = todayReports.reduce((a,b)=>a+b.total,0);
-  const monthStart = today().slice(0,7) + "-01";
-  const monthReports = reportSource.filter(r => r.date >= monthStart && r.date <= today());
-  const monthRevenue = monthReports.reduce((a,b)=>a+b.total,0);
-  const cashQrisToday = todayReports.reduce((a,b)=>a + (b.cash || 0) + (b.qris || 0), 0);
-  dashRevenueToday.textContent = rupiah(todayRevenue);
-  dashRevenueMonth.textContent = rupiah(monthRevenue);
-  dashCashQris.textContent = rupiah(cashQrisToday);
-  dashProfit.textContent = rupiah(revenueFilter - expenseFilter);
-
-  const daily = {};
-  reports.forEach(r => { if(!daily[r.date]) daily[r.date] = {omzet:0, expense:0}; daily[r.date].omzet += r.total; });
-  cashRows.filter(c=>c.type==='expense').forEach(c => { if(!daily[c.date]) daily[c.date] = {omzet:0, expense:0}; daily[c.date].expense += c.amount; });
-  const labels = Object.keys(daily).sort();
-  drawChart("cashChart", labels.length ? labels : ["Belum ada data"], [
-    {label:"Omzet", data: labels.length ? labels.map(d => daily[d].omzet) : [0]},
-    {label:"Pengeluaran", data: labels.length ? labels.map(d => daily[d].expense) : [0]}
-  ]);
-
-  const prodMap = {};
-  sales.forEach(s => { prodMap[s.productName] = (prodMap[s.productName] || 0) + s.qty; });
-  const pLabels = Object.keys(prodMap);
-  drawChart("productChart", pLabels.length ? pLabels : ["Belum ada data"], [
-    {label:"Qty Terjual", data: pLabels.length ? pLabels.map(k => prodMap[k]) : [0]}
-  ]);
-}
-function deleteReport(id){ if(confirm("Hapus laporan ini?")){ db.reports = db.reports.filter(r => r.id !== id); save(); renderAll(); } }
-function renderReport(){
-  const reports = visibleReports().sort((a,b)=>b.date.localeCompare(a.date));
-  const sales = flattenSales(reports);
-  const by = {};
-  sales.forEach(s => { if(!by[s.productName]) by[s.productName] = {qty:0,total:0}; by[s.productName].qty += s.qty; by[s.productName].total += s.total; });
-  const top = Object.entries(by).sort((a,b)=>b[1].qty-a[1].qty)[0];
-  reportText.textContent = top ? `Produk paling laku: ${top[0]} sebanyak ${top[1].qty} pcs.` : "Belum ada data.";
-  reportTable.innerHTML = `<tr><th>Tanggal</th><th>Penjual</th><th>Item</th><th>Omzet</th><th>Cash</th><th>QRIS</th><th>Status</th>${session.role==='admin' ? '<th>Aksi</th>' : ''}</tr>` + reports.map(r => `
-    <tr>
-      <td>${r.date}</td>
-      <td>${r.worker}</td>
-      <td>${r.items.map(i => `${i.productName} (${i.qty})`).join('<br>')}</td>
-      <td>${rupiah(r.total)}</td>
-      <td>${rupiah(r.cash || 0)}</td>
-      <td>${rupiah(r.qris || 0)}</td>
-      <td><span class="${r.status==='Cocok' ? 'matchOK' : 'matchDiff'}">${r.status}</span></td>
-      ${session.role==='admin' ? `<td><button class="danger" onclick="deleteReport('${r.id}')">Hapus</button></td>` : ''}
-    </tr>`).join("");
-}
-function renderMonthly(){
-  const m = monthPick.value || ym(), start = m + "-01", end = m + "-31";
-  const reports = db.reports.filter(r => r.date >= start && r.date <= end);
-  const sales = flattenSales(reports);
-  const cashRows = db.cash.filter(c => c.date >= start && c.date <= end);
-  const income = reports.reduce((a,b)=>a+b.total,0) + cashRows.filter(c=>c.type==='income').reduce((a,b)=>a+b.amount,0);
-  const expense = cashRows.filter(c=>c.type==='expense').reduce((a,b)=>a+b.amount,0);
-  const cashQris = reports.reduce((a,b)=>a+(b.cash||0)+(b.qris||0),0);
-  mIncome.textContent = rupiah(income); mExpense.textContent = rupiah(expense); mCashQris.textContent = rupiah(cashQris); mProfit.textContent = rupiah(income - expense);
-
-  const pMap = {};
-  sales.forEach(s => { if(!pMap[s.productName]) pMap[s.productName] = {qty:0,total:0}; pMap[s.productName].qty += s.qty; pMap[s.productName].total += s.total; });
-  monthlyProductTable.innerHTML = `<tr><th>Produk</th><th>Qty</th><th>Total</th></tr>` + Object.entries(pMap).sort((a,b)=>b[1].qty-a[1].qty).map(([name,val]) => `<tr><td>${name}</td><td>${val.qty}</td><td>${rupiah(val.total)}</td></tr>`).join("");
-
-  const wMap = {};
-  reports.forEach(r => { if(!wMap[r.worker]) wMap[r.worker] = {omzet:0,reports:0}; wMap[r.worker].omzet += r.total; wMap[r.worker].reports += 1; });
-  monthlyWorkerTable.innerHTML = `<tr><th>Penjual</th><th>Jumlah Laporan</th><th>Omzet</th></tr>` + Object.entries(wMap).sort((a,b)=>b[1].omzet-a[1].omzet).map(([name,val]) => `<tr><td>${name}</td><td>${val.reports}</td><td>${rupiah(val.omzet)}</td></tr>`).join("");
-}
-function addEmployee(){
-  const name = newEmpName.value.trim(), username = newEmpUser.value.trim(), password = newEmpPass.value;
-  if(!name || !username || !password) return alert("Isi nama, username, dan password.");
-  if(db.employees.some(e=>e.username===username) || username===db.settings.adminUser) return alert("Username sudah dipakai.");
-  db.employees.push({id:"e"+Date.now(), name, username, password});
-  newEmpName.value=""; newEmpUser.value=""; newEmpPass.value="";
-  save(); renderAll(); alert("Akun tim berhasil dibuat.");
-}
-function deleteEmployee(id){ if(confirm("Hapus akun tim ini?")){ db.employees = db.employees.filter(e => e.id !== id); save(); renderAll(); } }
-function renderEmployees(){
-  employeeTable.innerHTML = `<tr><th>Nama</th><th>Username</th><th>Password</th><th>Aksi</th></tr>` + db.employees.map(e => `<tr><td>${e.name}</td><td>${e.username}</td><td>${e.password}</td><td><button class="danger" onclick="deleteEmployee('${e.id}')">Hapus</button></td></tr>`).join("");
-}
-function exportCSV(){
-  let csv = "Tanggal,Penjual,Produk,Qty,Harga,Total,Cash,QRIS,Selisih,Status\n";
-  db.reports.forEach(r => r.items.forEach(i => { csv += `${r.date},${r.worker},${i.productName},${i.qty},${i.price},${i.total},${r.cash||0},${r.qris||0},${r.diff||0},${r.status}\n`; }));
-  download("merch-creativity-laporan.csv", csv, "text/csv");
-}
-function exportJSON(){ download("merch-creativity-backup.json", JSON.stringify(db,null,2), "application/json"); }
-function importJSON(e){
-  const file = e.target.files[0]; if(!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    try{
-      const data = JSON.parse(reader.result);
-      if(!data.products || !data.reports || !data.cash || !data.settings) throw new Error("invalid");
-      db = data; save(); renderAll(); alert("Restore berhasil.");
-    } catch(err){ alert("File backup tidak valid."); }
-  };
-  reader.readAsText(file);
-}
-function download(name, content, type){
-  const blob = new Blob([content], {type}), url = URL.createObjectURL(blob);
-  const a = document.createElement("a"); a.href = url; a.download = name; a.click(); URL.revokeObjectURL(url);
-}
-function saveSettings(){
-  const u = adminUser.value.trim(), p = adminPass.value;
-  if(!u) return alert("Username admin wajib diisi.");
-  db.settings.adminUser = u; if(p) db.settings.adminPass = p;
-  save(); adminPass.value = ""; alert("Setting admin berhasil disimpan.");
-}
-function clearAll(){
-  if(confirm("Yakin reset semua data aplikasi?")){
-    localStorage.removeItem("merchCreativityAppV1");
-    sessionStorage.removeItem("merchCreativitySessionV1");
-    location.reload();
-  }
-}
-function renderAll(){
+async function loadAll(){
   if(!session) return;
-  renderWorkerSelect(); renderProducts(); renderQuickInput(); renderCash(); renderDashboard(); renderReport(); renderMonthly(); renderEmployees();
+  setLoading(true);
+  try{
+    const [usersRes, prodRes, repRes, cashRes] = await Promise.all([
+      sb.from("app_users").select("id,name,username,role,is_active").eq("is_active", true).order("created_at", {ascending:true}),
+      sb.from("products").select("*").eq("is_active", true).order("created_at", {ascending:true}),
+      sb.from("reports").select("*, report_items(*)").order("report_date", {ascending:false}),
+      sb.from("cash_entries").select("*").order("entry_date", {ascending:false})
+    ]);
+    for(const r of [usersRes,prodRes,repRes,cashRes]) if(r.error) throw r.error;
+    db.employees = usersRes.data || [];
+    db.products = prodRes.data || [];
+    db.reports = (repRes.data || []).map(r => ({...r, date:r.report_date, worker:r.worker_name, cash:r.cash||0, qris:r.qris||0, items:(r.report_items||[]).map(i=>({productId:i.product_id, productName:i.product_name, qty:i.qty, price:i.price, total:i.subtotal}))}));
+    db.cash = (cashRes.data || []).map(c => ({...c, date:c.entry_date}));
+    renderAll();
+  } catch(err){ handleError("Gagal ambil data Supabase", err); }
+  finally{ setLoading(false); }
 }
-if('serviceWorker' in navigator && location.protocol !== 'file:'){ navigator.serviceWorker.register('./service-worker.js'); }
-window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); deferredPrompt = e; installBox.style.display = 'block'; });
-installBtn?.addEventListener('click', async () => { if(deferredPrompt){ deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; installBox.style.display = 'none'; } });
-document.addEventListener('keydown', e => { if(e.key==='Enter' && !loginPage.classList.contains('hide')) login(); });
+
+function productById(id){ return db.products.find(p=>p.id===id)||{name:"Produk terhapus", price:0, image:""}; }
+function renderWorkerSelect(){ const workers=db.employees.filter(e=>e.role==="pegawai"); if(session.role==="admin"){workerName.innerHTML=`<option value="${session.id}|${session.name}">${session.name}</option>`+workers.map(e=>`<option value="${e.id}|${e.name}">${e.name}</option>`).join("");} else {workerName.innerHTML=`<option value="${session.id}|${session.name}">${session.name}</option>`;} }
+function renderProductGallery(){ productGallery.innerHTML=db.products.map(p=>`<div class="prodCard"><img src="${p.image||'assets/product_pink.png'}" alt="${p.name}"><div class="body"><span class="pill">Produk</span><h4>${p.name}</h4><p>Harga: <b>${rupiah(p.price)}</b></p></div></div>`).join(""); }
+function renderProducts(){ renderProductGallery(); if(session.role==="admin"){productsTable.innerHTML=`<tr><th>Foto</th><th>Produk</th><th>Harga</th><th>Path Gambar</th><th>Aksi</th></tr>`+db.products.map(p=>`<tr><td><img class="productThumb" src="${p.image||'assets/product_pink.png'}"></td><td><input id="name_${p.id}" value="${p.name}"></td><td><input type="number" id="price_${p.id}" value="${p.price}"></td><td><input id="img_${p.id}" value="${p.image||''}"></td><td><button class="btn" onclick="updateProduct('${p.id}')">Simpan</button> <button class="danger" onclick="deleteProduct('${p.id}')">Hapus</button></td></tr>`).join("");} else {productsTable.innerHTML=`<tr><th>Foto</th><th>Produk</th><th>Harga</th></tr>`+db.products.map(p=>`<tr><td><img class="productThumb" src="${p.image||'assets/product_pink.png'}"></td><td>${p.name}</td><td>${rupiah(p.price)}</td></tr>`).join("");} }
+async function addProduct(){ const name=productName.value.trim(), price=+productPrice.value, image=productImage.value.trim()||"assets/product_pink.png"; if(!name||price<0)return alert("Nama dan harga wajib diisi."); setLoading(true); try{const {error}=await sb.from("products").insert({name,price,image}); if(error)throw error; productName.value="";productPrice.value="";productImage.value=""; await loadAll();}catch(err){handleError("Gagal tambah produk",err)}finally{setLoading(false)} }
+async function updateProduct(id){ const name=document.getElementById("name_"+id).value.trim(), price=+(document.getElementById("price_"+id).value)||0, image=document.getElementById("img_"+id).value.trim(); setLoading(true); try{const {error}=await sb.from("products").update({name,price,image}).eq("id",id); if(error)throw error; await loadAll(); alert("Produk berhasil diupdate.");}catch(err){handleError("Gagal update produk",err)}finally{setLoading(false)} }
+async function deleteProduct(id){ if(!confirm("Hapus produk ini?")) return; setLoading(true); try{const {error}=await sb.from("products").update({is_active:false}).eq("id",id); if(error)throw error; await loadAll();}catch(err){handleError("Gagal hapus produk",err)}finally{setLoading(false)} }
+
+function renderQuickInput(){ db.products.forEach(p=>{if(quickQty[p.id]===undefined)quickQty[p.id]=0}); quickProducts.innerHTML=db.products.map(p=>`<div class="productPick"><img src="${p.image||'assets/product_pink.png'}"><div><b>${p.name}</b><br><span class="small">${rupiah(p.price)} / pcs</span></div><button class="btn2" onclick="changeQty('${p.id}',-1)">−</button><input type="number" min="0" value="${quickQty[p.id]||0}" onchange="setQty('${p.id}',this.value)"><button class="btn" onclick="changeQty('${p.id}',1)">+</button></div>`).join(""); const selected=db.products.filter(p=>(quickQty[p.id]||0)>0), total=selected.reduce((s,p)=>s+quickQty[p.id]*p.price,0), cash=+cashPaid.value||0,qris=+qrisPaid.value||0,diff=(cash+qris)-total; quickTotal.textContent=rupiah(total); matchStatus.value=diff===0?"Cocok":`Selisih ${rupiah(diff)}`; matchStatus.className=diff===0?"matchOK":"matchDiff"; quickSummary.innerHTML=selected.length?selected.map(p=>`<div><b>${p.name}</b> • ${quickQty[p.id]} x ${rupiah(p.price)} = <b>${rupiah(quickQty[p.id]*p.price)}</b></div>`).join(""):"Belum ada item dipilih."; }
+function changeQty(id,d){quickQty[id]=Math.max(0,(quickQty[id]||0)+d);renderQuickInput();} function setQty(id,v){quickQty[id]=Math.max(0,+v||0);renderQuickInput();} function resetQuickInput(){quickQty={};cashPaid.value=0;qrisPaid.value=0;renderQuickInput();}
+async function saveWorkerReport(){ const [workerId,workerNameText]=workerName.value.split("|"); const items=db.products.filter(p=>(quickQty[p.id]||0)>0).map(p=>({product_id:p.id,product_name:p.name,qty:quickQty[p.id],price:p.price,subtotal:quickQty[p.id]*p.price})); if(!reportDate.value)return alert("Tanggal wajib diisi."); if(!items.length)return alert("Minimal pilih satu produk."); const total=items.reduce((a,b)=>a+b.subtotal,0), cash=+cashPaid.value||0,qris=+qrisPaid.value||0,diff=(cash+qris)-total,status=diff===0?"Cocok":"Selisih"; setLoading(true); try{const {data,error}=await sb.from("reports").insert({report_date:reportDate.value,worker_id:workerId,worker_name:workerNameText,total,cash,qris,diff,status,created_by:session.id}).select("id").single(); if(error)throw error; const reportItems=items.map(i=>({...i,report_id:data.id})); const res=await sb.from("report_items").insert(reportItems); if(res.error)throw res.error; resetQuickInput(); await loadAll(); showPage("laporan"); alert("Laporan berhasil tersimpan online.");}catch(err){handleError("Gagal simpan laporan",err)}finally{setLoading(false)} }
+
+async function addCash(){ const amount=+cashAmount.value; if(!cashDate.value||amount<=0)return alert("Lengkapi data cash dulu."); setLoading(true); try{const {error}=await sb.from("cash_entries").insert({entry_date:cashDate.value,type:cashType.value,category:cashCategory.value,amount,note:cashNote.value.trim(),created_by:session.id}); if(error)throw error; cashAmount.value="";cashNote.value=""; await loadAll();}catch(err){handleError("Gagal simpan cash",err)}finally{setLoading(false)} }
+async function deleteCash(id){ setLoading(true); try{const {error}=await sb.from("cash_entries").delete().eq("id",id); if(error)throw error; await loadAll();}catch(err){handleError("Gagal hapus cash",err)}finally{setLoading(false)} }
+function renderCash(){ cashTable.innerHTML=`<tr><th>Tanggal</th><th>Jenis</th><th>Kategori</th><th>Nominal</th><th>Aksi</th></tr>`+db.cash.filter(c=>inRange(c.date)).map(c=>`<tr><td>${c.date}</td><td>${c.type==='income'?'Pemasukan':'Pengeluaran'}</td><td>${c.category}</td><td>${rupiah(c.amount)}</td><td><button class="danger" onclick="deleteCash('${c.id}')">Hapus</button></td></tr>`).join(""); }
+
+function visibleReports(){let arr=db.reports.filter(r=>inRange(r.date)); if(session.role!=="admin")arr=arr.filter(r=>r.worker_id===session.id); return arr;} function flattenSales(src){const reps=src||visibleReports(); const rows=[]; reps.forEach(r=>r.items.forEach(i=>rows.push({...i,date:r.date,worker:r.worker,reportId:r.id,total:i.total||i.subtotal}))); return rows;}
+function drawChart(id,labels,datasets){ if(charts[id])charts[id].destroy(); charts[id]=new Chart(document.getElementById(id),{type:"bar",data:{labels,datasets},options:{responsive:true,plugins:{legend:{display:true}},scales:{y:{beginAtZero:true}}}}); }
+function renderDashboard(){ const source=session.role==="admin"?db.reports:db.reports.filter(r=>r.worker_id===session.id), reports=source.filter(r=>inRange(r.date)), cashRows=session.role==="admin"?db.cash.filter(c=>inRange(c.date)):[], rev=reports.reduce((s,r)=>s+r.total,0)+cashRows.filter(c=>c.type==="income").reduce((s,c)=>s+c.amount,0), exp=cashRows.filter(c=>c.type==="expense").reduce((s,c)=>s+c.amount,0), todays=source.filter(r=>r.date===today()), monthStart=today().slice(0,7)+"-01", monthReps=source.filter(r=>r.date>=monthStart&&r.date<=today()); dashRevenueToday.textContent=rupiah(todays.reduce((s,r)=>s+r.total,0)); dashRevenueMonth.textContent=rupiah(monthReps.reduce((s,r)=>s+r.total,0)); dashCashQris.textContent=rupiah(todays.reduce((s,r)=>s+(r.cash||0)+(r.qris||0),0)); dashProfit.textContent=rupiah(rev-exp); const daily={}; reports.forEach(r=>{daily[r.date]||={omzet:0,expense:0};daily[r.date].omzet+=r.total;}); cashRows.filter(c=>c.type==="expense").forEach(c=>{daily[c.date]||={omzet:0,expense:0};daily[c.date].expense+=c.amount;}); const labs=Object.keys(daily).sort(); drawChart("cashChart",labs.length?labs:["Belum ada data"],[{label:"Omzet",data:labs.length?labs.map(d=>daily[d].omzet):[0]},{label:"Pengeluaran",data:labs.length?labs.map(d=>daily[d].expense):[0]}]); const sales=flattenSales(reports), pm={}; sales.forEach(s=>pm[s.productName]=(pm[s.productName]||0)+s.qty); const pl=Object.keys(pm); drawChart("productChart",pl.length?pl:["Belum ada data"],[{label:"Qty Terjual",data:pl.length?pl.map(k=>pm[k]):[0]}]); }
+async function deleteReport(id){ if(!confirm("Hapus laporan ini?"))return; setLoading(true); try{const {error}=await sb.from("reports").delete().eq("id",id); if(error)throw error; await loadAll();}catch(err){handleError("Gagal hapus laporan",err)}finally{setLoading(false)} }
+function renderReport(){ const reports=visibleReports(); const sales=flattenSales(reports), by={}; sales.forEach(s=>{by[s.productName]||={qty:0,total:0};by[s.productName].qty+=s.qty;by[s.productName].total+=s.total;}); const top=Object.entries(by).sort((a,b)=>b[1].qty-a[1].qty)[0]; reportText.textContent=top?`Produk paling laku: ${top[0]} sebanyak ${top[1].qty} pcs.`:"Belum ada data."; reportTable.innerHTML=`<tr><th>Tanggal</th><th>Penjual</th><th>Item</th><th>Omzet</th><th>Cash</th><th>QRIS</th><th>Status</th>${session.role==='admin'?'<th>Aksi</th>':''}</tr>`+reports.map(r=>`<tr><td>${r.date}</td><td>${r.worker}</td><td>${r.items.map(i=>`${i.productName} (${i.qty})`).join('<br>')}</td><td>${rupiah(r.total)}</td><td>${rupiah(r.cash||0)}</td><td>${rupiah(r.qris||0)}</td><td><span class="${r.status==='Cocok'?'matchOK':'matchDiff'}">${r.status}</span></td>${session.role==='admin'?`<td><button class="danger" onclick="deleteReport('${r.id}')">Hapus</button></td>`:''}</tr>`).join(""); }
+function renderMonthly(){ const m=monthPick.value||ym(),start=m+"-01",end=m+"-31", reports=db.reports.filter(r=>r.date>=start&&r.date<=end), sales=flattenSales(reports), cashRows=db.cash.filter(c=>c.date>=start&&c.date<=end), inc=reports.reduce((s,r)=>s+r.total,0)+cashRows.filter(c=>c.type==="income").reduce((s,c)=>s+c.amount,0), exp=cashRows.filter(c=>c.type==="expense").reduce((s,c)=>s+c.amount,0); mIncome.textContent=rupiah(inc);mExpense.textContent=rupiah(exp);mCashQris.textContent=rupiah(reports.reduce((s,r)=>s+(r.cash||0)+(r.qris||0),0));mProfit.textContent=rupiah(inc-exp); const p={},w={}; sales.forEach(s=>{p[s.productName]||={qty:0,total:0};p[s.productName].qty+=s.qty;p[s.productName].total+=s.total;}); reports.forEach(r=>{w[r.worker]||={reports:0,omzet:0};w[r.worker].reports++;w[r.worker].omzet+=r.total;}); monthlyProductTable.innerHTML=`<tr><th>Produk</th><th>Qty</th><th>Total</th></tr>`+Object.entries(p).sort((a,b)=>b[1].qty-a[1].qty).map(([n,v])=>`<tr><td>${n}</td><td>${v.qty}</td><td>${rupiah(v.total)}</td></tr>`).join(""); monthlyWorkerTable.innerHTML=`<tr><th>Penjual</th><th>Laporan</th><th>Omzet</th></tr>`+Object.entries(w).sort((a,b)=>b[1].omzet-a[1].omzet).map(([n,v])=>`<tr><td>${n}</td><td>${v.reports}</td><td>${rupiah(v.omzet)}</td></tr>`).join(""); }
+async function addEmployee(){ const name=newEmpName.value.trim(), username=newEmpUser.value.trim(), password=newEmpPass.value; if(!name||!username||!password)return alert("Isi nama, username, dan password."); setLoading(true); try{const password_hash=await sha256(password); const {error}=await sb.from("app_users").insert({name,username,password_hash,role:"pegawai",is_active:true}); if(error)throw error; newEmpName.value="";newEmpUser.value="";newEmpPass.value=""; await loadAll(); alert("Akun tim berhasil dibuat.");}catch(err){handleError("Gagal buat akun tim",err)}finally{setLoading(false)} }
+async function deleteEmployee(id){ if(!confirm("Nonaktifkan akun tim ini?"))return; setLoading(true); try{const {error}=await sb.from("app_users").update({is_active:false}).eq("id",id); if(error)throw error; await loadAll();}catch(err){handleError("Gagal nonaktifkan akun",err)}finally{setLoading(false)} }
+function renderEmployees(){ const rows=db.employees.filter(e=>e.role==="pegawai"); employeeTable.innerHTML=`<tr><th>Nama</th><th>Username</th><th>Role</th><th>Aksi</th></tr>`+rows.map(e=>`<tr><td>${e.name}</td><td>${e.username}</td><td>${e.role}</td><td><button class="danger" onclick="deleteEmployee('${e.id}')">Nonaktifkan</button></td></tr>`).join(""); }
+async function saveSettings(){ const u=adminUser.value.trim(), p=adminPass.value; if(!u)return alert("Username admin wajib diisi."); setLoading(true); try{const payload={username:u}; if(p)payload.password_hash=await sha256(p); const {error}=await sb.from("app_users").update(payload).eq("id",session.id); if(error)throw error; session.username=u; sessionStorage.setItem("merchCreativitySupabaseSessionV1", JSON.stringify(session)); adminPass.value=""; await loadAll(); alert("Setting admin berhasil disimpan.");}catch(err){handleError("Gagal simpan admin",err)}finally{setLoading(false)} }
+function exportCSV(){ let csv="Tanggal,Penjual,Produk,Qty,Harga,Total,Cash,QRIS,Selisih,Status\n"; db.reports.forEach(r=>r.items.forEach(i=>{csv+=`${r.date},${r.worker},${i.productName},${i.qty},${i.price},${i.total},${r.cash||0},${r.qris||0},${r.diff||0},${r.status}\n`;})); const blob=new Blob([csv],{type:"text/csv"}),url=URL.createObjectURL(blob),a=document.createElement("a"); a.href=url; a.download="merch-creativity-supabase-laporan.csv"; a.click(); URL.revokeObjectURL(url); }
+function renderAll(){ if(!session)return; renderWorkerSelect(); renderProducts(); renderQuickInput(); renderCash(); renderDashboard(); renderReport(); renderMonthly(); renderEmployees(); }
+if('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('./service-worker.js');
+window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); deferredPrompt=e; installBox.style.display='block'; });
+installBtn?.addEventListener('click', async()=>{ if(deferredPrompt){deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; installBox.style.display='none';} });
+document.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!loginPage.classList.contains('hide')) login(); });
 boot();
 </script>
 </body>

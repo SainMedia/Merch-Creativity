@@ -1,11 +1,11 @@
 {
-  "name": "Merch Creativity",
+  "name": "Merch Creativity Supabase",
   "short_name": "Merch Creativity",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#fff7fb",
   "theme_color": "#ff7eb8",
-  "description": "Aplikasi pencatatan penjualan dan laporan Merch Creativity.",
+  "description": "Aplikasi laporan Merch Creativity dengan sinkron Supabase.",
   "icons": [
     {
       "src": "assets/icon.png",
