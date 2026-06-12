@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#ff7eb8">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="assets/icon.png">
-<title>Merch Creativity Supabase</title>
+<title>Merch Creativity Supabase v2 No Cache</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
@@ -50,15 +50,15 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
   <div class="authBox">
     <img class="authLogo" src="assets/logo_merch.png" alt="Merch Creativity">
     <h1>Merch Creativity</h1>
-    <div class="sub">Aplikasi laporan online sinkron Supabase.</div>
+    <div class="sub"><b>ONLINE SUPABASE v2</b><br>Data tersimpan online dan bisa dibuka dari device lain.</div>
     <label>Username</label><input id="loginUser" autocomplete="username">
     <label>Password</label><input id="loginPass" type="password" autocomplete="current-password">
     <div class="actions"><button class="btn" onclick="login()">Login</button></div>
-    <p class="small">Data tersimpan online di Supabase, jadi bisa dibuka dari device lain.</p>
+    <p class="small">Versi ini tidak memakai cache PWA, jadi update GitHub langsung kebaca.</p>
   </div>
 </div>
-<div id="app" class="hide">
-  <header><div class="headerWrap"><div class="brand"><img src="assets/logo_merch.png" alt="Merch Creativity"><div class="brandText"><h1>Merch Creativity</h1><p>Dashboard penjualan, laporan, cash/QRIS, dan kontrol produk merch.</p></div></div><div><span id="userBadge" class="badge"></span><button class="btn2" onclick="logout()">Logout</button></div></div></header>
+<div id="app" class="hide"><div class="onlineBadge">ONLINE SUPABASE v2</div>
+  <header><div class="headerWrap"><div class="brand"><img src="assets/logo_merch.png" alt="Merch Creativity"><div class="brandText"><h1>Merch Creativity</h1><p>ONLINE SUPABASE v2 • dashboard, laporan, cash/QRIS, dan kontrol produk merch.</p></div></div><div><span id="userBadge" class="badge"></span><button class="btn2" onclick="logout()">Logout</button></div></div></header>
   <main>
     <div id="installBox" class="installBox"><b>Install aplikasi ke device</b><p class="small">Tekan install biar lebih gampang dibuka seperti aplikasi biasa.</p><button id="installBtn" class="btn">Install Aplikasi</button></div>
     <div class="tabs">
@@ -101,7 +101,7 @@ table{width:100%;border-collapse:collapse;background:#fff;border-radius:16px;ove
     </section>
     <section id="tim" class="page grid hide"><div class="card span5"><h3>Buat Akun Tim</h3><label>Nama Tim</label><input id="newEmpName" placeholder="Contoh: Sinta"><label>Username</label><input id="newEmpUser" placeholder="sinta"><label>Password</label><input id="newEmpPass" type="password" placeholder="password"><div class="actions"><button class="btn" onclick="addEmployee()">Buat Akun</button></div></div><div class="card span7"><h3>Daftar Akun Tim</h3><div style="overflow:auto"><table id="employeeTable"></table></div></div></section>
     <section id="backup" class="page grid hide"><div class="card span6"><h3>Backup</h3><div class="actions"><button class="btn" onclick="exportCSV()">Export CSV Laporan</button><button class="btn2" onclick="loadAll()">Refresh dari Supabase</button></div><p class="small">Versi ini menyimpan data online ke Supabase, bukan localStorage.</p></div><div class="card span6"><h3>Setting Admin</h3><label>Username Admin</label><input id="adminUser"><label>Password Admin Baru</label><input id="adminPass" type="password"><div class="actions"><button class="btnGreen" onclick="saveSettings()">Simpan Admin</button></div></div></section>
-  </main><footer>Merch Creativity • Supabase sync version</footer>
+  </main><footer>Merch Creativity • ONLINE SUPABASE v2 • no-cache version</footer>
 </div>
 <script>
 const SUPABASE_URL = "https://khlarieqasamgwtdnxjy.supabase.co";
@@ -202,7 +202,17 @@ function renderEmployees(){ const rows=db.employees.filter(e=>e.role==="pegawai"
 async function saveSettings(){ const u=adminUser.value.trim(), p=adminPass.value; if(!u)return alert("Username admin wajib diisi."); setLoading(true); try{const payload={username:u}; if(p)payload.password_hash=await sha256(p); const {error}=await sb.from("app_users").update(payload).eq("id",session.id); if(error)throw error; session.username=u; sessionStorage.setItem("merchCreativitySupabaseSessionV1", JSON.stringify(session)); adminPass.value=""; await loadAll(); alert("Setting admin berhasil disimpan.");}catch(err){handleError("Gagal simpan admin",err)}finally{setLoading(false)} }
 function exportCSV(){ let csv="Tanggal,Penjual,Produk,Qty,Harga,Total,Cash,QRIS,Selisih,Status\n"; db.reports.forEach(r=>r.items.forEach(i=>{csv+=`${r.date},${r.worker},${i.productName},${i.qty},${i.price},${i.total},${r.cash||0},${r.qris||0},${r.diff||0},${r.status}\n`;})); const blob=new Blob([csv],{type:"text/csv"}),url=URL.createObjectURL(blob),a=document.createElement("a"); a.href=url; a.download="merch-creativity-supabase-laporan.csv"; a.click(); URL.revokeObjectURL(url); }
 function renderAll(){ if(!session)return; renderWorkerSelect(); renderProducts(); renderQuickInput(); renderCash(); renderDashboard(); renderReport(); renderMonthly(); renderEmployees(); }
-if('serviceWorker' in navigator && location.protocol !== 'file:') navigator.serviceWorker.register('./service-worker.js');
+
+// No-cache mode: unregister old service workers so browser tidak nyangkut versi localStorage lama.
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => regs.forEach(reg => reg.unregister()));
+}
+if (window.caches) {
+  caches.keys().then(keys => keys.forEach(k => {
+    if (k.includes('merch-creativity')) caches.delete(k);
+  }));
+}
+
 window.addEventListener('beforeinstallprompt', e=>{ e.preventDefault(); deferredPrompt=e; installBox.style.display='block'; });
 installBtn?.addEventListener('click', async()=>{ if(deferredPrompt){deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; installBox.style.display='none';} });
 document.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!loginPage.classList.contains('hide')) login(); });
